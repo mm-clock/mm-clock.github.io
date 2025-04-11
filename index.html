@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacker Digital Clock with Timer</title>
+    <style>
+        body {
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            transition: border 0.5s;
+            flex-direction: column;
+        }
+        
+        #title {
+            color: #00ff00;
+            font-size: 3rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #clock-container {
+            border: 3px solid #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+            margin-bottom: 10px;
+        }
+        
+        #clock {
+            color: #00ff00;
+            font-size: 5rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+        }
+        
+        .flashing-border {
+            border-color: red !important;
+            animation: border-pulse 0.5s infinite;
+        }
+        
+        @keyframes border-pulse {
+            0% { border-color: red; }
+            50% { border-color: #ff4444; }
+            100% { border-color: red; }
+        }
+        
+        .collapsible {
+            background-color: #111;
+            color: #00ff00;
+            cursor: pointer;
+            padding: 10px;
+            width: 200px;
+            border: 1px solid #00ff00;
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .collapsible:hover {
+            background-color: #222;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+        
+        .collapsible-content {
+            padding: 0 10px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        
+        #timer-container {
+            border: 2px solid #333;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 5px 0;
+        }
+        
+        #timer-display {
+            color: #00ff00;
+            font-size: 2.5rem;
+            margin: 10px 0;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+        
+        .timer-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .timer-btn {
+            background-color: #111;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            padding: 5px 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .timer-btn:hover {
+            background-color: #00ff00;
+            color: black;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+        }
+        
+        #start-stop-btn {
+            background-color: #111;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            padding: 8px 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 5px;
+        }
+        
+        #start-stop-btn:hover {
+            background-color: #00ff00;
+            color: black;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+        }
+        
+        .time-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 5px 0;
+        }
+        
+        .time-input span {
+            color: #00ff00;
+            font-size: 1rem;
+        }
+        
+        #calendar-container {
+            border: 2px solid #333;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 5px 0;
+            color: #00ff00;
+        }
+        
+        #calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        #calendar-month-year {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        #calendar-prev, #calendar-next {
+            background-color: #111;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+        #calendar-prev:hover, #calendar-next:hover {
+            background-color: #00ff00;
+            color: black;
+        }
+        
+        #calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .calendar-day-header {
+            font-weight: bold;
+        }
+        
+        #calendar-dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .calendar-date {
+            padding: 5px;
+            border-radius: 3px;
+        }
+        
+        .calendar-date.today {
+            background-color: #00ff00;
+            color: black;
+            font-weight: bold;
+        }
+        
+        .calendar-date.other-month {
+            color: #555;
+        }
+        
+        @media (max-width: 600px) {
+            #title {
+                font-size: 2rem;
+            }
+            #clock {
+                font-size: 3rem;
+            }
+            #timer-display {
+                font-size: 2rem;
+            }
+            .collapsible {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="title">MEMENTO MORI</div>
+    
+    <div id="clock-container">
+        <div id="clock"></div>
+    </div>
+
+    <button class="collapsible">Timer ▼</button>
+    <div class="collapsible-content">
+        <div id="timer-container">
+            <div id="timer-display">00:00:00</div>
+            <div class="timer-controls">
+                <div class="time-input">
+                    <span>H:</span>
+                    <button class="timer-btn" id="hour-plus">+</button>
+                    <button class="timer-btn" id="hour-minus">-</button>
+                </div>
+                <div class="time-input">
+                    <span>M:</span>
+                    <button class="timer-btn" id="minute-plus">+</button>
+                    <button class="timer-btn" id="minute-minus">-</button>
+                </div>
+                <div class="time-input">
+                    <span>S:</span>
+                    <button class="timer-btn" id="second-plus">+</button>
+                    <button class="timer-btn" id="second-minus">-</button>
+                </div>
+                <button class="timer-btn" id="reset-btn">R</button>
+            </div>
+            <button id="start-stop-btn">Start</button>
+        </div>
+    </div>
+
+    <button class="collapsible">Calendar ▼</button>
+    <div class="collapsible-content">
+        <div id="calendar-container">
+            <div id="calendar-header">
+                <button id="calendar-prev">◀</button>
+                <div id="calendar-month-year"></div>
+                <button id="calendar-next">▶</button>
+            </div>
+            <div id="calendar-days">
+                <div class="calendar-day-header">Mon</div>
+                <div class="calendar-day-header">Tue</div>
+                <div class="calendar-day-header">Wed</div>
+                <div class="calendar-day-header">Thu</div>
+                <div class="calendar-day-header">Fri</div>
+                <div class="calendar-day-header">Sat</div>
+                <div class="calendar-day-header">Sun</div>
+            </div>
+            <div id="calendar-dates"></div>
+        </div>
+    </div>
+
+    <script>
+        // Clock functionality
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+            
+            // Check if it's the start of a new hour (minutes and seconds are 0)
+            if (now.getMinutes() === 0 && now.getSeconds() < 10) {
+                document.getElementById('clock-container').classList.add('flashing-border');
+            } else {
+                document.getElementById('clock-container').classList.remove('flashing-border');
+            }
+        }
+        
+        // Timer functionality
+        let timer = {
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+            interval: null,
+            isRunning: false
+        };
+        
+        function updateTimerDisplay() {
+            const hours = timer.hours.toString().padStart(2, '0');
+            const minutes = timer.minutes.toString().padStart(2, '0');
+            const seconds = timer.seconds.toString().padStart(2, '0');
+            document.getElementById('timer-display').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        
+        function startStopTimer() {
+            const btn = document.getElementById('start-stop-btn');
+            
+            if (timer.isRunning) {
+                clearInterval(timer.interval);
+                timer.isRunning = false;
+                btn.textContent = 'Start';
+            } else {
+                if (timer.hours === 0 && timer.minutes === 0 && timer.seconds === 0) {
+                    return; // Don't start if timer is at 00:00:00
+                }
+                
+                timer.isRunning = true;
+                btn.textContent = 'Stop';
+                
+                timer.interval = setInterval(() => {
+                    if (timer.seconds > 0) {
+                        timer.seconds--;
+                    } else {
+                        if (timer.minutes > 0) {
+                            timer.minutes--;
+                            timer.seconds = 59;
+                        } else {
+                            if (timer.hours > 0) {
+                                timer.hours--;
+                                timer.minutes = 59;
+                                timer.seconds = 59;
+                            } else {
+                                // Timer reached 00:00:00
+                                clearInterval(timer.interval);
+                                timer.isRunning = false;
+                                btn.textContent = 'Start';
+                                // Flash the timer display
+                                const timerDisplay = document.getElementById('timer-display');
+                                timerDisplay.style.color = 'red';
+                                setTimeout(() => {
+                                    timerDisplay.style.color = '#00ff00';
+                                }, 1000);
+                                return;
+                            }
+                        }
+                    }
+                    updateTimerDisplay();
+                }, 1000);
+            }
+        }
+        
+        function resetTimer() {
+            clearInterval(timer.interval);
+            timer.hours = 0;
+            timer.minutes = 0;
+            timer.seconds = 0;
+            timer.isRunning = false;
+            document.getElementById('start-stop-btn').textContent = 'Start';
+            updateTimerDisplay();
+        }
+        
+        function adjustTime(unit, amount) {
+            if (timer.isRunning) return;
+            
+            if (unit === 'hours') {
+                timer.hours = Math.max(0, timer.hours + amount);
+            } else if (unit === 'minutes') {
+                timer.minutes = Math.max(0, Math.min(59, timer.minutes + amount));
+            } else if (unit === 'seconds') {
+                timer.seconds = Math.max(0, Math.min(59, timer.seconds + amount));
+            }
+            
+            updateTimerDisplay();
+        }
+        
+        // Calendar functionality
+        let currentDate = new Date();
+        
+        function updateCalendar() {
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                               "July", "August", "September", "October", "November", "December"];
+            
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
+            
+            document.getElementById('calendar-month-year').textContent = 
+                `${monthNames[currentMonth]} ${currentYear}`;
+            
+            const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            // Get the first Monday of the month (0 = Sunday, 1 = Monday, etc.)
+            let startingDay = firstDayOfMonth.getDay();
+            // Convert to Monday as first day (0 becomes 6, 1 becomes 0, etc.)
+            startingDay = (startingDay + 6) % 7;
+            
+            const today = new Date();
+            const isCurrentMonth = currentMonth === today.getMonth() && currentYear === today.getFullYear();
+            
+            let datesHTML = '';
+            let date = 1;
+            
+            // Previous month's days
+            const prevMonthDays = new Date(currentYear, currentMonth, 0).getDate();
+            for (let i = 0; i < startingDay; i++) {
+                datesHTML += `<div class="calendar-date other-month">${prevMonthDays - startingDay + i + 1}</div>`;
+            }
+            
+            // Current month's days
+            for (let i = 0; i < daysInMonth; i++) {
+                const isToday = isCurrentMonth && date === today.getDate();
+                datesHTML += `<div class="calendar-date ${isToday ? 'today' : ''}">${date}</div>`;
+                date++;
+            }
+            
+            // Next month's days
+            const totalCells = Math.ceil((daysInMonth + startingDay) / 7) * 7;
+            const remainingCells = totalCells - (daysInMonth + startingDay);
+            for (let i = 0; i < remainingCells; i++) {
+                datesHTML += `<div class="calendar-date other-month">${i + 1}</div>`;
+            }
+            
+            document.getElementById('calendar-dates').innerHTML = datesHTML;
+        }
+        
+        function prevMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            updateCalendar();
+        }
+        
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            updateCalendar();
+        }
+        
+        // Collapsible functionality
+        function setupCollapsibles() {
+            const coll = document.getElementsByClassName("collapsible");
+            
+            for (let i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    const content = this.nextElementSibling;
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        this.innerHTML = this.innerHTML.replace('▲', '▼');
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        this.innerHTML = this.innerHTML.replace('▼', '▲');
+                    }
+                });
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update the clock immediately and then every second
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            // Timer controls
+            document.getElementById('hour-plus').addEventListener('click', () => adjustTime('hours', 1));
+            document.getElementById('hour-minus').addEventListener('click', () => adjustTime('hours', -1));
+            document.getElementById('minute-plus').addEventListener('click', () => adjustTime('minutes', 1));
+            document.getElementById('minute-minus').addEventListener('click', () => adjustTime('minutes', -1));
+            document.getElementById('second-plus').addEventListener('click', () => adjustTime('seconds', 1));
+            document.getElementById('second-minus').addEventListener('click', () => adjustTime('seconds', -1));
+            document.getElementById('reset-btn').addEventListener('click', resetTimer);
+            document.getElementById('start-stop-btn').addEventListener('click', startStopTimer);
+            
+            // Calendar controls
+            document.getElementById('calendar-prev').addEventListener('click', prevMonth);
+            document.getElementById('calendar-next').addEventListener('click', nextMonth);
+            
+            // Initialize displays
+            updateTimerDisplay();
+            updateCalendar();
+            setupCollapsibles();
+        });
+    </script>
+</body>
+</html>
