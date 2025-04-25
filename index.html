@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hacker Digital Clock with Timer and Stopwatch</title>
+    <title>Hacker Digital Clock</title>
     <style>
         body {
             background-color: black;
@@ -16,172 +16,36 @@
             transition: border 0.5s;
             flex-direction: column;
         }
-        
+
         #clock-container {
             border: 3px solid #1a1a1a;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
-            margin-bottom: 10px;
         }
-        
+
         #clock {
             color: #00ff00;
             font-size: 5rem;
             font-weight: bold;
             text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
         }
-        
+
         .flashing-border {
             border-color: red !important;
             animation: border-pulse 0.5s infinite;
         }
-        
+
         @keyframes border-pulse {
             0% { border-color: red; }
             50% { border-color: #ff4444; }
             100% { border-color: red; }
         }
-        
-        .collapsible {
-            background-color: #111;
-            color: #00ff00;
-            cursor: pointer;
-            padding: 10px;
-            width: 200px;
-            border: 1px solid #00ff00;
-            text-align: center;
-            font-size: 1.2rem;
-            margin: 5px 0;
-            border-radius: 5px;
-            transition: all 0.3s;
-        }
-        
-        .collapsible:hover {
-            background-color: #222;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-        }
-        
-        .collapsible-content {
-            padding: 0 10px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-        
-        #timer-container {
-            border: 2px solid #333;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 5px 0;
-        }
-        
-        #timer-display, #stopwatch-display {
-            color: #00ff00;
-            font-size: 2.5rem;
-            margin: 10px 0;
-            font-weight: bold;
-            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
-        }
-        
-        .timer-controls, .stopwatch-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .timer-btn, .stopwatch-btn {
-            background-color: #111;
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            border-radius: 4px;
-            padding: 5px 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .timer-btn:hover, .stopwatch-btn:hover {
-            background-color: #00ff00;
-            color: black;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
-        }
-        
-        #start-stop-btn, #stopwatch-start-stop, #stopwatch-reset {
-            background-color: #111;
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            border-radius: 4px;
-            padding: 8px 25px;
-            font-family: 'Courier New', monospace;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 5px;
-        }
-        
-        #start-stop-btn:hover, #stopwatch-start-stop:hover, #stopwatch-reset:hover {
-            background-color: #00ff00;
-            color: black;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
-        }
-        
-        .time-input {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 5px 0;
-        }
-        
-        .time-input span {
-            color: #00ff00;
-            font-size: 1rem;
-        }
-        
-        #stopwatch-container {
-            border: 2px solid #333;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 5px 0;
-        }
-        
-        .stopwatch-laps {
-            width: 100%;
-            margin-top: 10px;
-            max-height: 150px;
-            overflow-y: auto;
-            border-top: 1px solid #333;
-            padding-top: 10px;
-        }
-        
-        .lap-item {
-            color: #00ff00;
-            padding: 5px 0;
-            border-bottom: 1px solid #222;
-        }
-        
+
         @media (max-width: 600px) {
             #clock {
                 font-size: 3rem;
-            }
-            #timer-display, #stopwatch-display {
-                font-size: 2rem;
-            }
-            .collapsible {
-                width: 80%;
             }
         }
     </style>
@@ -191,265 +55,25 @@
         <div id="clock"></div>
     </div>
 
-    <button class="collapsible">Timer ▼</button>
-    <div class="collapsible-content">
-        <div id="timer-container">
-            <div id="timer-display">00:00:00</div>
-            <div class="timer-controls">
-                <div class="time-input">
-                    <span>H:</span>
-                    <button class="timer-btn" id="hour-plus">+</button>
-                    <button class="timer-btn" id="hour-minus">-</button>
-                </div>
-                <div class="time-input">
-                    <span>M:</span>
-                    <button class="timer-btn" id="minute-plus">+</button>
-                    <button class="timer-btn" id="minute-minus">-</button>
-                </div>
-                <div class="time-input">
-                    <span>S:</span>
-                    <button class="timer-btn" id="second-plus">+</button>
-                    <button class="timer-btn" id="second-minus">-</button>
-                </div>
-                <button class="timer-btn" id="reset-btn">R</button>
-            </div>
-            <button id="start-stop-btn">Start</button>
-        </div>
-    </div>
-
-    <button class="collapsible">Stopwatch ▼</button>
-    <div class="collapsible-content">
-        <div id="stopwatch-container">
-            <div id="stopwatch-display">00:00:00.00</div>
-            <div class="stopwatch-controls">
-                <button id="stopwatch-start-stop">Start</button>
-                <button id="stopwatch-lap">Lap</button>
-                <button id="stopwatch-reset">Reset</button>
-            </div>
-            <div class="stopwatch-laps" id="stopwatch-laps"></div>
-        </div>
-    </div>
-
     <script>
-        // Clock functionality
         function updateClock() {
             const now = new Date();
             const hours = now.getHours().toString().padStart(2, '0');
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const seconds = now.getSeconds().toString().padStart(2, '0');
-            
+
             document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
-            
-            // Check if it's the start of a new hour (minutes and seconds are 0)
+
             if (now.getMinutes() === 0 && now.getSeconds() < 10) {
                 document.getElementById('clock-container').classList.add('flashing-border');
             } else {
                 document.getElementById('clock-container').classList.remove('flashing-border');
             }
         }
-        
-        // Timer functionality
-        let timer = {
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-            interval: null,
-            isRunning: false
-        };
-        
-        function updateTimerDisplay() {
-            const hours = timer.hours.toString().padStart(2, '0');
-            const minutes = timer.minutes.toString().padStart(2, '0');
-            const seconds = timer.seconds.toString().padStart(2, '0');
-            document.getElementById('timer-display').textContent = `${hours}:${minutes}:${seconds}`;
-        }
-        
-        function startStopTimer() {
-            const btn = document.getElementById('start-stop-btn');
-            
-            if (timer.isRunning) {
-                clearInterval(timer.interval);
-                timer.isRunning = false;
-                btn.textContent = 'Start';
-            } else {
-                if (timer.hours === 0 && timer.minutes === 0 && timer.seconds === 0) {
-                    return; // Don't start if timer is at 00:00:00
-                }
-                
-                timer.isRunning = true;
-                btn.textContent = 'Stop';
-                
-                timer.interval = setInterval(() => {
-                    if (timer.seconds > 0) {
-                        timer.seconds--;
-                    } else {
-                        if (timer.minutes > 0) {
-                            timer.minutes--;
-                            timer.seconds = 59;
-                        } else {
-                            if (timer.hours > 0) {
-                                timer.hours--;
-                                timer.minutes = 59;
-                                timer.seconds = 59;
-                            } else {
-                                // Timer reached 00:00:00
-                                clearInterval(timer.interval);
-                                timer.isRunning = false;
-                                btn.textContent = 'Start';
-                                // Flash the timer display
-                                const timerDisplay = document.getElementById('timer-display');
-                                timerDisplay.style.color = 'red';
-                                setTimeout(() => {
-                                    timerDisplay.style.color = '#00ff00';
-                                }, 1000);
-                                return;
-                            }
-                        }
-                    }
-                    updateTimerDisplay();
-                }, 1000);
-            }
-        }
-        
-        function resetTimer() {
-            clearInterval(timer.interval);
-            timer.hours = 0;
-            timer.minutes = 0;
-            timer.seconds = 0;
-            timer.isRunning = false;
-            document.getElementById('start-stop-btn').textContent = 'Start';
-            updateTimerDisplay();
-        }
-        
-        function adjustTime(unit, amount) {
-            if (timer.isRunning) return;
-            
-            if (unit === 'hours') {
-                timer.hours = Math.max(0, timer.hours + amount);
-            } else if (unit === 'minutes') {
-                timer.minutes = Math.max(0, Math.min(59, timer.minutes + amount));
-            } else if (unit === 'seconds') {
-                timer.seconds = Math.max(0, Math.min(59, timer.seconds + amount));
-            }
-            
-            updateTimerDisplay();
-        }
-        
-        // Stopwatch functionality
-        let stopwatch = {
-            startTime: 0,
-            elapsedTime: 0,
-            interval: null,
-            isRunning: false,
-            laps: []
-        };
-        
-        function updateStopwatchDisplay() {
-            const time = stopwatch.elapsedTime;
-            const hours = Math.floor(time / 3600000).toString().padStart(2, '0');
-            const minutes = Math.floor((time % 3600000) / 60000).toString().padStart(2, '0');
-            const seconds = Math.floor((time % 60000) / 1000).toString().padStart(2, '0');
-            const milliseconds = Math.floor(time % 1000 / 10).toString().padStart(2, '0');
-            
-            document.getElementById('stopwatch-display').textContent = `${hours}:${minutes}:${seconds}.${milliseconds}`;
-        }
-        
-        function startStopStopwatch() {
-            const btn = document.getElementById('stopwatch-start-stop');
-            
-            if (stopwatch.isRunning) {
-                clearInterval(stopwatch.interval);
-                stopwatch.isRunning = false;
-                stopwatch.elapsedTime += Date.now() - stopwatch.startTime;
-                btn.textContent = 'Start';
-                document.getElementById('stopwatch-lap').disabled = true;
-            } else {
-                stopwatch.startTime = Date.now();
-                stopwatch.isRunning = true;
-                btn.textContent = 'Stop';
-                document.getElementById('stopwatch-lap').disabled = false;
-                
-                stopwatch.interval = setInterval(() => {
-                    stopwatch.elapsedTime = Date.now() - stopwatch.startTime + (stopwatch.elapsedTime || 0);
-                    updateStopwatchDisplay();
-                }, 10);
-            }
-        }
-        
-        function resetStopwatch() {
-            clearInterval(stopwatch.interval);
-            stopwatch.isRunning = false;
-            stopwatch.elapsedTime = 0;
-            stopwatch.laps = [];
-            document.getElementById('stopwatch-start-stop').textContent = 'Start';
-            document.getElementById('stopwatch-lap').disabled = true;
-            updateStopwatchDisplay();
-            document.getElementById('stopwatch-laps').innerHTML = '';
-        }
-        
-        function lapStopwatch() {
-            if (!stopwatch.isRunning) return;
-            
-            const lapTime = stopwatch.elapsedTime;
-            stopwatch.laps.unshift(lapTime);
-            
-            const lapsContainer = document.getElementById('stopwatch-laps');
-            const lapItem = document.createElement('div');
-            lapItem.className = 'lap-item';
-            
-            const hours = Math.floor(lapTime / 3600000).toString().padStart(2, '0');
-            const minutes = Math.floor((lapTime % 3600000) / 60000).toString().padStart(2, '0');
-            const seconds = Math.floor((lapTime % 60000) / 1000).toString().padStart(2, '0');
-            const milliseconds = Math.floor(lapTime % 1000 / 10).toString().padStart(2, '0');
-            
-            lapItem.textContent = `Lap ${stopwatch.laps.length}: ${hours}:${minutes}:${seconds}.${milliseconds}`;
-            lapsContainer.insertBefore(lapItem, lapsContainer.firstChild);
-        }
-        
-        // Collapsible functionality
-        function setupCollapsibles() {
-            const coll = document.getElementsByClassName("collapsible");
-            
-            for (let i = 0; i < coll.length; i++) {
-                coll[i].addEventListener("click", function() {
-                    this.classList.toggle("active");
-                    const content = this.nextElementSibling;
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                        this.innerHTML = this.innerHTML.replace('▲', '▼');
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                        this.innerHTML = this.innerHTML.replace('▼', '▲');
-                    }
-                });
-            }
-        }
-        
-        // Initialize
+
         document.addEventListener('DOMContentLoaded', () => {
-            // Update the clock immediately and then every second
             updateClock();
             setInterval(updateClock, 1000);
-            
-            // Timer controls
-            document.getElementById('hour-plus').addEventListener('click', () => adjustTime('hours', 1));
-            document.getElementById('hour-minus').addEventListener('click', () => adjustTime('hours', -1));
-            document.getElementById('minute-plus').addEventListener('click', () => adjustTime('minutes', 1));
-            document.getElementById('minute-minus').addEventListener('click', () => adjustTime('minutes', -1));
-            document.getElementById('second-plus').addEventListener('click', () => adjustTime('seconds', 1));
-            document.getElementById('second-minus').addEventListener('click', () => adjustTime('seconds', -1));
-            document.getElementById('reset-btn').addEventListener('click', resetTimer);
-            document.getElementById('start-stop-btn').addEventListener('click', startStopTimer);
-            
-            // Stopwatch controls
-            document.getElementById('stopwatch-start-stop').addEventListener('click', startStopStopwatch);
-            document.getElementById('stopwatch-reset').addEventListener('click', resetStopwatch);
-            document.getElementById('stopwatch-lap').addEventListener('click', lapStopwatch);
-            document.getElementById('stopwatch-lap').disabled = true;
-            
-            // Initialize displays
-            updateTimerDisplay();
-            setupCollapsibles();
         });
     </script>
 </body>
