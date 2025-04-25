@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hacker Digital Clock with Timer</title>
+    <title>Hacker Digital Clock with Timer and Stopwatch</title>
     <style>
         body {
             background-color: black;
@@ -15,15 +15,6 @@
             font-family: 'Courier New', monospace;
             transition: border 0.5s;
             flex-direction: column;
-        }
-        
-        #title {
-            color: #00ff00;
-            font-size: 3rem;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
-            margin-bottom: 20px;
-            text-align: center;
         }
         
         #clock-container {
@@ -93,7 +84,7 @@
             margin: 5px 0;
         }
         
-        #timer-display {
+        #timer-display, #stopwatch-display {
             color: #00ff00;
             font-size: 2.5rem;
             margin: 10px 0;
@@ -101,13 +92,13 @@
             text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
         }
         
-        .timer-controls {
+        .timer-controls, .stopwatch-controls {
             display: flex;
             gap: 10px;
             margin-bottom: 10px;
         }
         
-        .timer-btn {
+        .timer-btn, .stopwatch-btn {
             background-color: #111;
             color: #00ff00;
             border: 1px solid #00ff00;
@@ -119,13 +110,13 @@
             transition: all 0.2s;
         }
         
-        .timer-btn:hover {
+        .timer-btn:hover, .stopwatch-btn:hover {
             background-color: #00ff00;
             color: black;
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
         }
         
-        #start-stop-btn {
+        #start-stop-btn, #stopwatch-start-stop, #stopwatch-reset {
             background-color: #111;
             color: #00ff00;
             border: 1px solid #00ff00;
@@ -138,7 +129,7 @@
             margin-top: 5px;
         }
         
-        #start-stop-btn:hover {
+        #start-stop-btn:hover, #stopwatch-start-stop:hover, #stopwatch-reset:hover {
             background-color: #00ff00;
             color: black;
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
@@ -156,81 +147,37 @@
             font-size: 1rem;
         }
         
-        #calendar-container {
+        #stopwatch-container {
             border: 2px solid #333;
             padding: 15px;
             border-radius: 8px;
             text-align: center;
-            margin: 5px 0;
-            color: #00ff00;
-        }
-        
-        #calendar-header {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            margin-bottom: 10px;
+            margin: 5px 0;
         }
         
-        #calendar-month-year {
-            font-size: 1.2rem;
-            font-weight: bold;
+        .stopwatch-laps {
+            width: 100%;
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            border-top: 1px solid #333;
+            padding-top: 10px;
         }
         
-        #calendar-prev, #calendar-next {
-            background-color: #111;
+        .lap-item {
             color: #00ff00;
-            border: 1px solid #00ff00;
-            border-radius: 4px;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        
-        #calendar-prev:hover, #calendar-next:hover {
-            background-color: #00ff00;
-            color: black;
-        }
-        
-        #calendar-days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            margin-bottom: 10px;
-        }
-        
-        .calendar-day-header {
-            font-weight: bold;
-        }
-        
-        #calendar-dates {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-        }
-        
-        .calendar-date {
-            padding: 5px;
-            border-radius: 3px;
-        }
-        
-        .calendar-date.today {
-            background-color: #00ff00;
-            color: black;
-            font-weight: bold;
-        }
-        
-        .calendar-date.other-month {
-            color: #555;
+            padding: 5px 0;
+            border-bottom: 1px solid #222;
         }
         
         @media (max-width: 600px) {
-            #title {
-                font-size: 2rem;
-            }
             #clock {
                 font-size: 3rem;
             }
-            #timer-display {
+            #timer-display, #stopwatch-display {
                 font-size: 2rem;
             }
             .collapsible {
@@ -240,8 +187,6 @@
     </style>
 </head>
 <body>
-    <div id="title">MEMENTO MORI</div>
-    
     <div id="clock-container">
         <div id="clock"></div>
     </div>
@@ -272,24 +217,16 @@
         </div>
     </div>
 
-    <button class="collapsible">Calendar ▼</button>
+    <button class="collapsible">Stopwatch ▼</button>
     <div class="collapsible-content">
-        <div id="calendar-container">
-            <div id="calendar-header">
-                <button id="calendar-prev">◀</button>
-                <div id="calendar-month-year"></div>
-                <button id="calendar-next">▶</button>
+        <div id="stopwatch-container">
+            <div id="stopwatch-display">00:00:00.00</div>
+            <div class="stopwatch-controls">
+                <button id="stopwatch-start-stop">Start</button>
+                <button id="stopwatch-lap">Lap</button>
+                <button id="stopwatch-reset">Reset</button>
             </div>
-            <div id="calendar-days">
-                <div class="calendar-day-header">Mon</div>
-                <div class="calendar-day-header">Tue</div>
-                <div class="calendar-day-header">Wed</div>
-                <div class="calendar-day-header">Thu</div>
-                <div class="calendar-day-header">Fri</div>
-                <div class="calendar-day-header">Sat</div>
-                <div class="calendar-day-header">Sun</div>
-            </div>
-            <div id="calendar-dates"></div>
+            <div class="stopwatch-laps" id="stopwatch-laps"></div>
         </div>
     </div>
 
@@ -398,64 +335,75 @@
             updateTimerDisplay();
         }
         
-        // Calendar functionality
-        let currentDate = new Date();
+        // Stopwatch functionality
+        let stopwatch = {
+            startTime: 0,
+            elapsedTime: 0,
+            interval: null,
+            isRunning: false,
+            laps: []
+        };
         
-        function updateCalendar() {
-            const monthNames = ["January", "February", "March", "April", "May", "June",
-                               "July", "August", "September", "October", "November", "December"];
+        function updateStopwatchDisplay() {
+            const time = stopwatch.elapsedTime;
+            const hours = Math.floor(time / 3600000).toString().padStart(2, '0');
+            const minutes = Math.floor((time % 3600000) / 60000).toString().padStart(2, '0');
+            const seconds = Math.floor((time % 60000) / 1000).toString().padStart(2, '0');
+            const milliseconds = Math.floor(time % 1000 / 10).toString().padStart(2, '0');
             
-            const currentMonth = currentDate.getMonth();
-            const currentYear = currentDate.getFullYear();
-            
-            document.getElementById('calendar-month-year').textContent = 
-                `${monthNames[currentMonth]} ${currentYear}`;
-            
-            const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-            
-            // Get the first Monday of the month (0 = Sunday, 1 = Monday, etc.)
-            let startingDay = firstDayOfMonth.getDay();
-            // Convert to Monday as first day (0 becomes 6, 1 becomes 0, etc.)
-            startingDay = (startingDay + 6) % 7;
-            
-            const today = new Date();
-            const isCurrentMonth = currentMonth === today.getMonth() && currentYear === today.getFullYear();
-            
-            let datesHTML = '';
-            let date = 1;
-            
-            // Previous month's days
-            const prevMonthDays = new Date(currentYear, currentMonth, 0).getDate();
-            for (let i = 0; i < startingDay; i++) {
-                datesHTML += `<div class="calendar-date other-month">${prevMonthDays - startingDay + i + 1}</div>`;
-            }
-            
-            // Current month's days
-            for (let i = 0; i < daysInMonth; i++) {
-                const isToday = isCurrentMonth && date === today.getDate();
-                datesHTML += `<div class="calendar-date ${isToday ? 'today' : ''}">${date}</div>`;
-                date++;
-            }
-            
-            // Next month's days
-            const totalCells = Math.ceil((daysInMonth + startingDay) / 7) * 7;
-            const remainingCells = totalCells - (daysInMonth + startingDay);
-            for (let i = 0; i < remainingCells; i++) {
-                datesHTML += `<div class="calendar-date other-month">${i + 1}</div>`;
-            }
-            
-            document.getElementById('calendar-dates').innerHTML = datesHTML;
+            document.getElementById('stopwatch-display').textContent = `${hours}:${minutes}:${seconds}.${milliseconds}`;
         }
         
-        function prevMonth() {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            updateCalendar();
+        function startStopStopwatch() {
+            const btn = document.getElementById('stopwatch-start-stop');
+            
+            if (stopwatch.isRunning) {
+                clearInterval(stopwatch.interval);
+                stopwatch.isRunning = false;
+                stopwatch.elapsedTime += Date.now() - stopwatch.startTime;
+                btn.textContent = 'Start';
+                document.getElementById('stopwatch-lap').disabled = true;
+            } else {
+                stopwatch.startTime = Date.now();
+                stopwatch.isRunning = true;
+                btn.textContent = 'Stop';
+                document.getElementById('stopwatch-lap').disabled = false;
+                
+                stopwatch.interval = setInterval(() => {
+                    stopwatch.elapsedTime = Date.now() - stopwatch.startTime + (stopwatch.elapsedTime || 0);
+                    updateStopwatchDisplay();
+                }, 10);
+            }
         }
         
-        function nextMonth() {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            updateCalendar();
+        function resetStopwatch() {
+            clearInterval(stopwatch.interval);
+            stopwatch.isRunning = false;
+            stopwatch.elapsedTime = 0;
+            stopwatch.laps = [];
+            document.getElementById('stopwatch-start-stop').textContent = 'Start';
+            document.getElementById('stopwatch-lap').disabled = true;
+            updateStopwatchDisplay();
+            document.getElementById('stopwatch-laps').innerHTML = '';
+        }
+        
+        function lapStopwatch() {
+            if (!stopwatch.isRunning) return;
+            
+            const lapTime = stopwatch.elapsedTime;
+            stopwatch.laps.unshift(lapTime);
+            
+            const lapsContainer = document.getElementById('stopwatch-laps');
+            const lapItem = document.createElement('div');
+            lapItem.className = 'lap-item';
+            
+            const hours = Math.floor(lapTime / 3600000).toString().padStart(2, '0');
+            const minutes = Math.floor((lapTime % 3600000) / 60000).toString().padStart(2, '0');
+            const seconds = Math.floor((lapTime % 60000) / 1000).toString().padStart(2, '0');
+            const milliseconds = Math.floor(lapTime % 1000 / 10).toString().padStart(2, '0');
+            
+            lapItem.textContent = `Lap ${stopwatch.laps.length}: ${hours}:${minutes}:${seconds}.${milliseconds}`;
+            lapsContainer.insertBefore(lapItem, lapsContainer.firstChild);
         }
         
         // Collapsible functionality
@@ -493,13 +441,14 @@
             document.getElementById('reset-btn').addEventListener('click', resetTimer);
             document.getElementById('start-stop-btn').addEventListener('click', startStopTimer);
             
-            // Calendar controls
-            document.getElementById('calendar-prev').addEventListener('click', prevMonth);
-            document.getElementById('calendar-next').addEventListener('click', nextMonth);
+            // Stopwatch controls
+            document.getElementById('stopwatch-start-stop').addEventListener('click', startStopStopwatch);
+            document.getElementById('stopwatch-reset').addEventListener('click', resetStopwatch);
+            document.getElementById('stopwatch-lap').addEventListener('click', lapStopwatch);
+            document.getElementById('stopwatch-lap').disabled = true;
             
             // Initialize displays
             updateTimerDisplay();
-            updateCalendar();
             setupCollapsibles();
         });
     </script>
